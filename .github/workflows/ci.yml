@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
   packages: write
 
 jobs:
@@ -46,3 +46,20 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.sha }}
             ghcr.io/${{ github.repository }}:latest
+
+      - name: Update Kubernetes image tag
+        if: github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, 'ci: update Kubernetes image')
+        run: |
+          sed -i "s/newTag: .*/newTag: ${{ github.sha }}/" kubernetes/overlays/local/kustomization.yaml
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add kubernetes/overlays/local/kustomization.yaml
+
+          if git diff --cached --quiet; then
+            echo "No Kubernetes manifest changes"
+          else
+            git commit -m "ci: update Kubernetes image to ${{ github.sha }}"
+            git push
+          fi
