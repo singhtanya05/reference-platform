@@ -9,4 +9,4 @@ resources:
 images:
   - name: reference-platform
     newName: ghcr.io/singhtanya05/reference-platform
-    newTag: 79d20ec4e164f5d9008ea570afb8e35ba13841d7
+    newTag: 5c931dbc4de536269835d7ffba6027a0633421e5
