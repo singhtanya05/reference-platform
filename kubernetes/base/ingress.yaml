@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: reference-platform
+  namespace: reference-platform
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: reference-platform
+                port:
+                  number: 80
+          - path: /swagger-ui
+            pathType: Prefix
+            backend:
+              service:
+                name: reference-platform
+                port:
+                  number: 80
+          - path: /v3/api-docs
+            pathType: Prefix
+            backend:
+              service:
+                name: reference-platform
+                port:
+                  number: 80
+          - path: /actuator
+            pathType: Prefix
+            backend:
+              service:
+                name: reference-platform
+                port:
+                  number: 80

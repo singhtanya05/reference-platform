@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reference-platform
+  namespace: reference-platform
+  labels:
+    app: reference-platform
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: reference-platform
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  template:
+    metadata:
+      labels:
+        app: reference-platform
+
+    spec:
+      containers:
+        - name: reference-platform
+          image: reference-platform:local
+          imagePullPolicy: Never
+
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+
+          env:
+            - name: DB_URL
+              value: jdbc:postgresql://postgres:5432/reference_platform
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: reference-platform-db
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: reference-platform-db
+                  key: DB_PASSWORD
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: reference-platform-jwt
+                  key: SECRET
+
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
