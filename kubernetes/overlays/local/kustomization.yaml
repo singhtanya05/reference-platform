@@ -8,5 +8,5 @@ resources:
 
 images:
   - name: reference-platform
-    newName: reference-platform
-    newTag: local
+    newName: ghcr.io/singhtanya05/reference-platform
+    newTag: latest

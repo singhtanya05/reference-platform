@@ -28,7 +28,7 @@ spec:
       containers:
         - name: reference-platform
           image: reference-platform:local
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
 
           ports:
             - containerPort: 8080
