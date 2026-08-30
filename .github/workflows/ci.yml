@@ -48,7 +48,7 @@ jobs:
             ghcr.io/${{ github.repository }}:latest
 
       - name: Update Kubernetes image tag
-        if: github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, 'ci: update Kubernetes image')
+        if: "github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, 'ci: update Kubernetes image')"
         run: |
           sed -i "s/newTag: .*/newTag: ${{ github.sha }}/" kubernetes/overlays/local/kustomization.yaml
 
