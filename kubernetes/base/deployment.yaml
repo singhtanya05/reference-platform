@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: reference-platform
-          image: reference-platform:local
+          image: 840744349912.dkr.ecr.ap-south-1.amazonaws.com/reference-platform:latest
           imagePullPolicy: IfNotPresent
 
           ports:
@@ -37,21 +37,34 @@ spec:
           env:
             - name: DB_URL
               value: jdbc:postgresql://postgres:5432/reference_platform
+
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
                   name: reference-platform-db
                   key: DB_USER
+
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: reference-platform-db
                   key: DB_PASSWORD
+
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: reference-platform-jwt
                   key: SECRET
+
+          # Allows Spring Boot enough time to start
+          # before liveness/readiness checks take over.
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 30
 
           livenessProbe:
             httpGet:
