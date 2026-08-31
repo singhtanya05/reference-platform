@@ -34,3 +34,4 @@ build/
 terraform.tfstate
 terraform.tfstate.*
 .terraform/
+terraform/tfplan
