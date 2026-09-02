@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: reference-platform
-          image: 840744349912.dkr.ecr.ap-south-1.amazonaws.com/reference-platform:latest
+          image: reference-platform:unset # short name so kustomize's `images:` override actually matches in every overlay
           imagePullPolicy: IfNotPresent
 
           ports:
